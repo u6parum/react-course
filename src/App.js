@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import Person from "./components/Person/Person";
 import Radium, { StyleRoot } from "radium";
-import "./App.css";
+import classes from "./App.module.css"; // CSS Modules enabled !
+import ErrorBoundary from "./components/ErrorBondary/ErrorBoundary";
 
 class App extends Component {
   state = {
@@ -82,12 +83,14 @@ class App extends Component {
     };
 
     // Dynamic css classes
-    const classNames = [];
+    const testInlineStyleClasses = [];
     if (this.state.persons.length <= 2) {
-      classNames.push("red");
+      //classNames.push("red");
+      testInlineStyleClasses.push(classes.red);
     }
     if (this.state.persons.length <= 1) {
-      classNames.push("bold");
+      //classNames.push("bold");
+      testInlineStyleClasses.push(classes.bold);
     }
 
     if (this.state.showPersons) {
@@ -100,23 +103,32 @@ class App extends Component {
 
     return (
       <StyleRoot>
-        <div className="App">
+        {/* For css modules we use properties, not strings */}
+        <div className={classes.App}>
           <h1>Hello React!</h1>
-          <p className={classNames.join(" ")}>Style changes conditionally</p>
+          <p className={testInlineStyleClasses.join(" ")}>
+            Style changes conditionally
+          </p>
           <button style={style} onClick={this.showPersonsHandler}>
             Show Persons
           </button>
           {this.state.showPersons && (
             <div>
               {this.state.persons.map((person, personIndex) => {
+                {
+                  /* ErrorBoundary is not a good solution */
+                }
                 return (
-                  <Person
-                    key={person.id}
-                    name={person.name}
-                    age={person.age}
-                    click={() => this.deletePersonHandler(personIndex)}
-                    changed={event => this.nameChangedHandler(event, person.id)}
-                  />
+                  <ErrorBoundary key={person.id}>
+                    <Person
+                      name={person.name}
+                      age={person.age}
+                      click={() => this.deletePersonHandler(personIndex)}
+                      changed={event =>
+                        this.nameChangedHandler(event, person.id)
+                      }
+                    />
+                  </ErrorBoundary>
                 );
               })}
             </div>

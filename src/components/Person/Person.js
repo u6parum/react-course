@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Radium from "radium";
-import "./Person.css";
+import classes from "./Person.module.css";
 
 // class Person extends Component {
 //   render() {
@@ -28,7 +28,7 @@ const person = props => {
   };
 
   return (
-    <div className="Person" style={style}>
+    <div className={classes.Person} style={style}>
       <p onClick={props.click}>
         Person "{props.name}". Age = {props.age}. Returning JSX. {Math.random()}
       </p>

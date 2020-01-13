@@ -1,0 +1,16 @@
+.App {
+  text-align: center;
+}
+
+.red {
+  color: red;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+/* Does not overrive inline styles ! */
+/* .App button {
+  border: 1px solid yellow;
+} */
