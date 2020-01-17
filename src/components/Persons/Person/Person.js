@@ -5,6 +5,8 @@ import withClass from "../../hoc/withClass";
 //import Radium from "radium";
 import classes from "./Person.module.css";
 
+import { AuthContext } from "../../../App";
+
 // class Person extends Component {
 //   render() {
 //     return (
@@ -46,6 +48,8 @@ class Person extends Component {
   constructor(props) {
     super(props);
     console.log("[Person.js] Inside ctor", props);
+    this.inputElement = React.createRef();
+    //this.providerConsumerTestRef = React.createRef();
   }
 
   //WARNING! To be deprecated in React v17. Use componentDidMount instead.
@@ -55,7 +59,12 @@ class Person extends Component {
 
   componentDidMount() {
     console.log("[Person.js] Inside componentDidMount", this.props);
-    if (this.props.position === 1) this.inputElement.focus(); // Here we access ref element
+    //if (this.props.position === 1) this.inputElement.focus(); // Here we access ref element
+    //if (this.props.position === 2) this.providerConsumerTestRef.current.focus();
+  }
+
+  focus() {
+    this.inputElement.current.focus();
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -97,14 +106,19 @@ class Person extends Component {
   render() {
     return (
       <Aux>
+        <AuthContext.Consumer>
+          {auth => (auth ? <p>Authenticated!</p> : null)}
+        </AuthContext.Consumer>
         <p onClick={this.props.click}>
           Person "{this.props.name}". Age = {this.props.age}. Returning JSX.{" "}
           {Math.random()}
         </p>
         <input
-          ref={inp => {
-            this.inputElement = inp;
-          }} // Reference to this input
+          // ref={inp => {
+          //   this.inputElement = inp;
+          // }} // Reference to this input
+          //ref={this.providerConsumerTestRef}
+          ref={this.inputElement}
           type="text"
           onChange={this.props.changed}
           value={this.props.name}

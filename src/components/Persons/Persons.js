@@ -9,6 +9,7 @@ export default class Persons extends PureComponent {
   constructor(props) {
     super(props);
     console.log("[Persons.js] Inside ctor", props);
+    this.lastPersonRef = React.createRef();
   }
 
   //WARNING! To be deprecated in React v17. Use componentDidMount instead.
@@ -18,6 +19,7 @@ export default class Persons extends PureComponent {
 
   componentDidMount() {
     console.log("[Persons.js] Inside componentDidMount", this.props);
+    this.lastPersonRef.current.focus();
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -68,6 +70,7 @@ export default class Persons extends PureComponent {
             position={personIndex}
             name={person.name}
             age={person.age}
+            ref={this.lastPersonRef}
             click={() => this.props.clicked(personIndex)}
             changed={event => this.props.changed(event, person.id)}
           />

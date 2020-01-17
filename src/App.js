@@ -4,6 +4,10 @@ import Persons from "./components/Persons/Persons";
 import Cockpit from "./components/Cockpit/Cockpit";
 //import classes from "./App.module.css"; // CSS Modules enabled !
 
+// It is better to use AuthContext in cases of Global settings
+// Otherwise use props to pass data to subcomponents
+export const AuthContext = React.createContext(false);
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -51,6 +55,26 @@ class App extends Component {
     );
   }
 
+  // Called when props are updated
+  // You can set state here accordingly
+  static getDerivedStateFromProps(nextProps, prevState) {
+    console.log(
+      "[UPDATE App.js] Inside getDerivedStateFromProps",
+      nextProps,
+      prevState
+    );
+    return prevState;
+  }
+
+  // Get the snapshot of the DOM right before update
+  getSnapshotBeforeUpdate(prevProps, prevState) {
+    console.log(
+      "[UPDATE App.js] Inside getSnapshotBeforeUpdate",
+      prevProps,
+      prevState
+    );
+  }
+
   state = {
     persons: [
       { id: 1, name: "Slava", age: 30 },
@@ -58,7 +82,8 @@ class App extends Component {
       { id: 3, name: "Genrih", age: 45 }
     ],
     showPersons: false,
-    toggleCounter: 0
+    toggleCounter: 0,
+    authenticated: false
   };
 
   nameChangedHandler = (event, personId) => {
@@ -122,6 +147,10 @@ class App extends Component {
     }));
   };
 
+  loginHandler = () => {
+    this.setState({ authenticated: true });
+  };
+
   render() {
     console.log("[App.js] Inside render", this.props);
 
@@ -155,15 +184,16 @@ class App extends Component {
             persons={this.state.persons}
             showPersons={this.state.showPersons}
             clicked={this.togglePersonsHandler}
+            login={this.loginHandler}
           />
           {this.state.showPersons && (
-            <div>
+            <AuthContext.Provider value={this.state.authenticated}>
               <Persons
                 persons={this.state.persons}
                 clicked={this.deletePersonHandler}
                 changed={this.nameChangedHandler}
               />
-            </div>
+            </AuthContext.Provider>
           )}
         </div>
       </StyleRoot>
